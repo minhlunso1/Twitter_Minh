@@ -1,0 +1,42 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
+
+    defaultConfig {
+        applicationId "minhna.submission.twitter_minh"
+        minSdkVersion 16
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.android.support:design:23.1.1'
+    compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'com.loopj.android:android-async-http:1.4.8'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.michaelpardo:activeandroid:3.1.0-SNAPSHOT'
+    compile files('src/main/java/minhna/submission/twitter_minh/libs/codepath-oauth-0.4.1.jar')
+    compile files('src/main/java/minhna/submission/twitter_minh/libs/codepath-utils.jar')
+    compile files('src/main/java/minhna/submission/twitter_minh/libs/org.apache.http.legacy.jar')
+    compile files('src/main/java/minhna/submission/twitter_minh/libs/scribe-codepath-0.0.3.jar')
+    compile 'com.android.support:recyclerview-v7:23.1.1'
+    compile 'com.makeramen:roundedimageview:2.2.1'
+}
