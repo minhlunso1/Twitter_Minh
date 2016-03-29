@@ -36,8 +36,8 @@ public class MainActivity extends AppCompatActivity {
     public static long since_id = 1;
 
     private TwitterClient twitterClient;
-    private List<TwitterModel> list;
-    private ItemAdapter adapter;
+    public static List<TwitterModel> list;
+    public static ItemAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +71,35 @@ public class MainActivity extends AppCompatActivity {
 
         list = new ArrayList<>();
         adapter = new ItemAdapter(this, list);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+        recyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(layoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+                count++;
+                getMoreData();
+            }
+        });
+    }
+
+    private void getMoreData() {
+            twitterClient.getTwitterTimeline(new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                    super.onSuccess(statusCode, headers, response);
+                    try {
+                        for (int i=count-10; i<count; i++) {
+                            JSONObject object = response.getJSONObject(i);
+                            TwitterModel model = TwitterModel.getTwitterModel(object);
+                            list.add(model);
+                        }
+                        adapter.notifyDataSetChanged();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
     }
 
     @Override
@@ -113,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
                 super.onSuccess(statusCode, headers, response);
                 try {
                     list.clear();
-                    for (int i=0; i<10; i++) {
+                    for (int i=count-10; i<count; i++) {
                         JSONObject object = response.getJSONObject(i);
                         TwitterModel model = TwitterModel.getTwitterModel(object);
                         list.add(model);
