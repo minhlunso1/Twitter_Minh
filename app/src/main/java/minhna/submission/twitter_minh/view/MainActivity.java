@@ -86,7 +86,9 @@ public class MainActivity extends AppCompatActivity implements PostDialogFragmen
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                if (tab.getPosition()==0)
+                int pos =tab.getPosition();
+                viewPager.setCurrentItem(pos);
+                if (pos==0)
                     fab.setVisibility(View.VISIBLE);
                 else
                     fab.setVisibility(View.INVISIBLE);
