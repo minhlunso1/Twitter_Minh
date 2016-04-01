@@ -13,8 +13,8 @@ The following user stories must be completed:
 User can sign in to Twitter using OAuth login (2 points)
 User can view the tweets from their home timeline
 User should be displayed the username, name, and body for each tweet (2 points)
-User should be displayed the relative timestamp for each tweet "8m", "7h" (NOT DONE)(1 point)
-User can view more tweets as they scroll with infinite pagination (NOT DONE) (1 point)
+User should be displayed the relative timestamp for each tweet "8m", "7h" (1 point)
+User can view more tweets as they scroll with infinite pagination (1 point)
 User can compose a new tweet
 User can click a “Compose” icon in the Action Bar on the top right (1 point)
 User can then enter a new tweet and post this to twitter (2 points)
@@ -44,7 +44,7 @@ Bonus: Replace Picasso with Glide for more efficient image rendering. (1 point)
 
 ## Video Walkthrough 
 
-<img src='http://i.imgur.com/QIgmTlh.gif' title='Twitter_Minh' width='' alt='Twitter_Minh' />
+<img src='http://i.imgur.com/pAjYFwD.gif' title='Twitter_Minh' width='' alt='Twitter_Minh' />
 
 ## Notes
 
