@@ -80,6 +80,7 @@ public class PostDialogFragment extends DialogFragment {
         btnTweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+<<<<<<< HEAD
                 final String status = edtBody.getText().toString();
                 TwitterApplication.getTwitterClient().doPost(status, new JsonHttpResponseHandler() {
                     @Override
@@ -92,6 +93,24 @@ public class PostDialogFragment extends DialogFragment {
                     }
                 });
 
+=======
+                //something wrong about this api
+//                TwitterApplication.getTwitterClient().doPost(edtBody.getText().toString(), new JsonHttpResponseHandler() {
+//                    @Override
+//                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+//                        super.onSuccess(statusCode, headers, response);
+//                        Toast.makeText(getActivity(), "Tweet successfully", Toast.LENGTH_SHORT).show();
+//                        dismiss();
+//                    }
+//                });
+                TwitterModel model = new TwitterModel();
+                model.setBody(edtBody.getText().toString());
+                model.setid(AC.OWNER_ID);
+                model.setUser(new TwitterModel.UserModel("Name",null));
+                MainActivity.list.add(model);
+                MainActivity.adapter.notifyDataSetChanged();
+                dismiss();
+>>>>>>> 8511e6392b11ed7ac9e55b901ac1b515976eef9c
             }
         });
 
