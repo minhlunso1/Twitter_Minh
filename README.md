@@ -4,7 +4,7 @@
 
 Submitted by: **Minh Nguyen Anh**
 
-Time spent: 6 hours spent in total
+Time spent: 10 hours spent in total
 
 ## User Stories
 
@@ -18,7 +18,7 @@ User can view more tweets as they scroll with infinite pagination (NOT DONE) (1 
 User can compose a new tweet
 User can click a “Compose” icon in the Action Bar on the top right (1 point)
 User can then enter a new tweet and post this to twitter (2 points)
-User is taken back to home timeline with new tweet visible in timeline (NOT DONE)(1 point)
+User is taken back to home timeline with new tweet visible in timeline (1 point)
 
 The following advanced user stories are optional but recommended:
 
