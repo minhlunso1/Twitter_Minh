@@ -134,14 +134,19 @@ public class HomeFragment extends Fragment {
     }
 
     public void updateView(TwitterModel model){
-        list.clear();
-        list.add(model);
-        getMoreData(0);
+        twitterClient = TwitterApplication.getTwitterClient();
+        list = new ArrayList<>();
+        adapter = new ItemAdapter(activity, list);
+        callRefresh();
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        callRefresh();
+    }
+
+    private void callRefresh() {
         if (!swipeRefreshLayout.isRefreshing()) {
             swipeRefreshLayout.post(new Runnable() {
                 @Override
@@ -154,3 +159,5 @@ public class HomeFragment extends Fragment {
     }
 
 }
+
+
