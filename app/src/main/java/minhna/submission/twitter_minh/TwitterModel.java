@@ -82,6 +82,19 @@ public class TwitterModel implements Parcelable {
         return model;
     }
 
+    public static TwitterModel getTwitterModel(JSONObject jsonObject, String status){
+        TwitterModel model = new TwitterModel();
+        try {
+            model.setBody(status);
+            model.setid(jsonObject.getLong("id"));
+            JSONObject userObject = jsonObject.getJSONObject("user");
+            model.setUser(new UserModel(userObject.getString("name"), userObject.getString("profile_image_url")));
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+        return model;
+    }
+
     public String getBody() {
         return body;
     }

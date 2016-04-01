@@ -22,6 +22,9 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import org.apache.http.Header;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -41,6 +44,8 @@ public class PostDialogFragment extends DialogFragment {
     @Bind(R.id.btn_tweet)
     Button btnTweet;
 
+    MyListener listener;
+
     public static  PostDialogFragment newInstance(String id) {
         PostDialogFragment frag = new PostDialogFragment();
         Bundle args = new Bundle();
@@ -48,6 +53,10 @@ public class PostDialogFragment extends DialogFragment {
         frag.setArguments(args);
 
         return frag;
+    }
+
+    public interface MyListener{
+        public void onUpdateList(JSONObject object, String status);
     }
 
     @NonNull
@@ -71,14 +80,18 @@ public class PostDialogFragment extends DialogFragment {
         btnTweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TwitterApplication.getTwitterClient().doPost(edtBody.getText().toString(), new JsonHttpResponseHandler() {
+                final String status = edtBody.getText().toString();
+                TwitterApplication.getTwitterClient().doPost(status, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
                         Toast.makeText(getActivity(), "Tweet successfully", Toast.LENGTH_SHORT).show();
+                        listener = (MyListener) getActivity();
+                        listener.onUpdateList(response, status);
                         dismiss();
                     }
                 });
+
             }
         });
 

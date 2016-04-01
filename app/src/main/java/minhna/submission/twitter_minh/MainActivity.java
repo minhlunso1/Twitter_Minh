@@ -25,7 +25,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements PostDialogFragment.MyListener {
 
     @Bind(R.id.swipeRefeshLayout)
     SwipeRefreshLayout swipeRefreshLayout;
@@ -36,8 +36,9 @@ public class MainActivity extends AppCompatActivity {
     public static long since_id = 1;
 
     private TwitterClient twitterClient;
-    private List<TwitterModel> list;
-    private ItemAdapter adapter;
+    public static List<TwitterModel> list;
+    public static ItemAdapter adapter;
+    public static LinearLayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 try {
-                    getData();
+                    getData(1);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -71,8 +73,34 @@ public class MainActivity extends AppCompatActivity {
 
         list = new ArrayList<>();
         adapter = new ItemAdapter(this, list);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+        recyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(layoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+                getMoreData(++page);
+            }
+        });
+    }
+
+    private void getMoreData(int page) {
+            twitterClient.getTwitterTimeline(page, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                    super.onSuccess(statusCode, headers, response);
+                    try {
+                        for (int i=count-10; i<count; i++) {
+                            JSONObject object = response.getJSONObject(i);
+                            TwitterModel model = TwitterModel.getTwitterModel(object);
+                            list.add(model);
+                        }
+                        adapter.notifyDataSetChanged();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
     }
 
     @Override
@@ -86,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-        getData();
+        getData(1);
     }
 
     @Override
@@ -106,14 +134,14 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void getData(){
-        twitterClient.getTwitterTimeline(new JsonHttpResponseHandler() {
+    public void getData(int page){
+        twitterClient.getTwitterTimeline(page, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
                 try {
                     list.clear();
-                    for (int i=0; i<10; i++) {
+                    for (int i=count-10; i<count; i++) {
                         JSONObject object = response.getJSONObject(i);
                         TwitterModel model = TwitterModel.getTwitterModel(object);
                         list.add(model);
@@ -125,5 +153,11 @@ public class MainActivity extends AppCompatActivity {
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
+    }
+
+    @Override
+    public void onUpdateList(JSONObject object, String status) {
+        list.clear();
+        getMoreData(1);
     }
 }

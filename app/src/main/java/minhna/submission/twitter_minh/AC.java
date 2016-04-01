@@ -10,5 +10,5 @@ public class AC {
 
     public static final String BASE_URL = "https://api.twitter.com/1.1";
     public static final String HOME_URL = "/statuses/home_timeline.json";
-    public static final String POST_URL = "direct_messages/new.json";
+    public static final String POST_URL = "statuses/update.json";
 }
