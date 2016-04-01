@@ -38,10 +38,7 @@ public class MainActivity extends AppCompatActivity implements PostDialogFragmen
     private TwitterClient twitterClient;
     public static List<TwitterModel> list;
     public static ItemAdapter adapter;
-<<<<<<< HEAD
     public static LinearLayoutManager layoutManager;
-=======
->>>>>>> 8511e6392b11ed7ac9e55b901ac1b515976eef9c
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,48 +73,34 @@ public class MainActivity extends AppCompatActivity implements PostDialogFragmen
 
         list = new ArrayList<>();
         adapter = new ItemAdapter(this, list);
-<<<<<<< HEAD
         layoutManager = new LinearLayoutManager(this);
-=======
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
->>>>>>> 8511e6392b11ed7ac9e55b901ac1b515976eef9c
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
         recyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
-<<<<<<< HEAD
-                getMoreData(++page);
-=======
-                count++;
-                getMoreData();
->>>>>>> 8511e6392b11ed7ac9e55b901ac1b515976eef9c
+                getMoreData(page);
             }
         });
     }
 
-<<<<<<< HEAD
-    private void getMoreData(int page) {
-            twitterClient.getTwitterTimeline(page, new JsonHttpResponseHandler() {
-=======
-    private void getMoreData() {
-            twitterClient.getTwitterTimeline(new JsonHttpResponseHandler() {
->>>>>>> 8511e6392b11ed7ac9e55b901ac1b515976eef9c
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                    super.onSuccess(statusCode, headers, response);
-                    try {
-                        for (int i=count-10; i<count; i++) {
-                            JSONObject object = response.getJSONObject(i);
-                            TwitterModel model = TwitterModel.getTwitterModel(object);
-                            list.add(model);
-                        }
-                        adapter.notifyDataSetChanged();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+    private void getMoreData(final int page) {
+        twitterClient.getTwitterTimeline(page+1, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                super.onSuccess(statusCode, headers, response);
+                try {
+                    for (int i=count-10; i<count; i++) {
+                        JSONObject object = response.getJSONObject(i);
+                        TwitterModel model = TwitterModel.getTwitterModel(object);
+                        list.add(model);
                     }
+                    adapter.notifyItemRangeChanged((page*10)-1, count*page);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            });
+            }
+        });
     }
 
     @Override

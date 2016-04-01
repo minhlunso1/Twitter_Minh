@@ -1,12 +1,20 @@
 package minhna.submission.twitter_minh;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 import com.codepath.oauth.OAuthLoginActionBarActivity;
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.apache.http.Header;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
+
+    ProgressDialog progressDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -18,9 +26,25 @@ public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
 	// i.e Display application "homepage"
 	@Override
 	public void onLoginSuccess() {
-		 Intent i = new Intent(this, MainActivity.class);
-		 startActivity(i);
-		 finish();
+         progressDialog = ProgressDialog.show(this, "Loading",
+                "Please wait", true);
+		 TwitterApplication.getTwitterClient().getProfile(new JsonHttpResponseHandler(){
+			 @Override
+			 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+				 super.onSuccess(statusCode, headers, response);
+				 try {
+					 AC.owner_id = response.getLong("id");
+					 AC.username = response.getString("name");
+                     AC.profile_img_url = response.getString("profile_image_url");
+                     Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                     startActivity(i);
+                     progressDialog.dismiss();
+                     finish();
+				 } catch (JSONException e) {
+					 e.printStackTrace();
+				 }
+			 }
+		 });
 	}
 
 	// OAuth authentication flow failed, handle the error
