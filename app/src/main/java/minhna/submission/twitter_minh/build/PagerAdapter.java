@@ -12,13 +12,14 @@ import minhna.submission.twitter_minh.view.MentionFragment;
  */
 public class PagerAdapter extends FragmentStatePagerAdapter {
 
-    Fragment fragment;
+    HomeFragment fragment;
+    MentionFragment fragment_other;
 
     public PagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
-    public Fragment getCurrentFragment(){
+    public Fragment getHomeFragment(){
         return fragment;
     }
 
@@ -29,8 +30,8 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
                 fragment=new HomeFragment();
                 break;
             case 1:
-                fragment=new MentionFragment();
-                break;
+                fragment_other=new MentionFragment();
+                return fragment_other;
         }
         return fragment;
     }

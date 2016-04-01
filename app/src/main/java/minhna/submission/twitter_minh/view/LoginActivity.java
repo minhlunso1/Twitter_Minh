@@ -42,9 +42,9 @@ public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
 					 AC.username = response.getString("name");
                      AC.profile_img_url = response.getString("profile_image_url");
                      Intent i = new Intent(LoginActivity.this, MainActivity.class);
+					 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                      startActivity(i);
                      progressDialog.dismiss();
-                     finish();
 				 } catch (JSONException e) {
 					 e.printStackTrace();
 				 }

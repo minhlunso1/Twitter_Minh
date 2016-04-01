@@ -134,9 +134,6 @@ public class HomeFragment extends Fragment {
     }
 
     public void updateView(TwitterModel model){
-        twitterClient = TwitterApplication.getTwitterClient();
-        list = new ArrayList<>();
-        adapter = new ItemAdapter(activity, list);
         callRefresh();
     }
 

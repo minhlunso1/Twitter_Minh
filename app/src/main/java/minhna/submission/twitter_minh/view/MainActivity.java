@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements PostDialogFragmen
     @Override
     public void onUpdateList(JSONObject object, String status) {
         if (viewPager.getCurrentItem()==0) {
-            HomeFragment homeFragment = (HomeFragment) adapter.getItem(0);
+            HomeFragment homeFragment = (HomeFragment) adapter.getHomeFragment();
             homeFragment.updateView(TwitterModel.getTwitterModel(object, status));
         }
     }
