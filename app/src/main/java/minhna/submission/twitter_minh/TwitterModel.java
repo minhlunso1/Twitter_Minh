@@ -2,9 +2,12 @@ package minhna.submission.twitter_minh;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import minhna.submission.twitter_minh.utils.ParseRelativeData;
 
 /**
  * Created by Administrator on 28-Mar-16.
@@ -13,7 +16,7 @@ public class TwitterModel implements Parcelable {
     private String body;
     private long id;
     private UserModel user;
-
+    private String createdTime;
 
     public static class UserModel implements Parcelable {
         private String name;
@@ -70,10 +73,12 @@ public class TwitterModel implements Parcelable {
     }
 
     public static TwitterModel getTwitterModel(JSONObject jsonObject){
+        Log.d("debug", "json:"+jsonObject.toString());
         TwitterModel model = new TwitterModel();
         try {
             model.setBody(jsonObject.getString("text"));
             model.setid(jsonObject.getLong("id"));
+            model.setCreatedTime(ParseRelativeData.getRelativeTimeAgo(jsonObject.getString("created_at")));
             JSONObject userObject = jsonObject.getJSONObject("user");
             model.setUser(new UserModel(userObject.getString("name"), userObject.getString("profile_image_url")));
         } catch (JSONException e){
@@ -87,6 +92,7 @@ public class TwitterModel implements Parcelable {
         try {
             model.setBody(status);
             model.setid(jsonObject.getLong("id"));
+            model.setCreatedTime(ParseRelativeData.getRelativeTimeAgo(jsonObject.getString("created_at")));
             JSONObject userObject = jsonObject.getJSONObject("user");
             model.setUser(new UserModel(userObject.getString("name"), userObject.getString("profile_image_url")));
         } catch (JSONException e){
@@ -119,6 +125,14 @@ public class TwitterModel implements Parcelable {
         this.user = user;
     }
 
+    public String getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(String createdTime) {
+        this.createdTime = createdTime;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -129,6 +143,7 @@ public class TwitterModel implements Parcelable {
         dest.writeString(this.body);
         dest.writeLong(this.id);
         dest.writeParcelable(this.user, flags);
+        dest.writeString(this.createdTime);
     }
 
     public TwitterModel() {
@@ -138,6 +153,7 @@ public class TwitterModel implements Parcelable {
         this.body = in.readString();
         this.id = in.readLong();
         this.user = in.readParcelable(UserModel.class.getClassLoader());
+        this.createdTime = in.readString();
     }
 
     public static final Creator<TwitterModel> CREATOR = new Creator<TwitterModel>() {

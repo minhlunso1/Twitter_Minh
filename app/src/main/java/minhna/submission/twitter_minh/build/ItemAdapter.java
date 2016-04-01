@@ -1,4 +1,4 @@
-package minhna.submission.twitter_minh;
+package minhna.submission.twitter_minh.build;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +15,8 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import minhna.submission.twitter_minh.R;
+import minhna.submission.twitter_minh.TwitterModel;
 
 /**
  * Created by Administrator on 13-Mar-16.
@@ -39,14 +41,14 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
     public void onBindViewHolder(ItemAdapter.ItemViewHolder holder, int position) {
         final TwitterModel item = list.get(position);
         final TwitterModel.UserModel user = item.getUser();
-            Glide.with(context)
-                    .load(user.getProfileImageUrl())
-                    .placeholder(R.mipmap.ic_launcher)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .centerCrop()
-                    .into(holder.userAva);
-            holder.userName.setText(user.getName());
-            holder.text.setText(item.getBody());
+        Glide.with(context)
+                .load(user.getProfileImageUrl())
+                .error(R.drawable.ic_hearing_white_36dp)
+                .centerCrop()
+                .into(holder.userAva);
+        holder.userName.setText(user.getName());
+        holder.text.setText(item.getBody());
+        holder.tvTime.setText(item.getCreatedTime());
     }
 
     @Override
@@ -62,7 +64,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         TextView userName;
         @Bind(R.id.tv_text)
         TextView text;
-
+        @Bind(R.id.tv_time)
+        TextView tvTime;
 
         public ItemViewHolder(View itemView) {
             super(itemView);

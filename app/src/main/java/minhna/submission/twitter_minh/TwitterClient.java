@@ -9,6 +9,9 @@ import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import minhna.submission.twitter_minh.view.HomeFragment;
+import minhna.submission.twitter_minh.view.MainActivity;
+
 public class TwitterClient extends OAuthBaseClient {
 	public static final Class<? extends Api> REST_API_CLASS = TwitterApi.class; // Change this
 	public static final String REST_URL = AC.BASE_URL; // Change this, base API URL
@@ -20,14 +23,18 @@ public class TwitterClient extends OAuthBaseClient {
 		super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
 	}
 
-	public void getTwitterTimeline(int page, AsyncHttpResponseHandler handler){
-		String apiUrl = getApiUrl(AC.HOME_URL);
-		RequestParams params = new RequestParams();
-		params.put("count", MainActivity.count);
-		params.put("since_id", MainActivity.since_id);
-		params.put("page", page);
-		client.get(apiUrl, params, handler);
-	}
+    public void getTwitterTimeline(int type, int page, AsyncHttpResponseHandler handler){
+        String apiUrl = "";
+        if (type==0)//homeline
+            apiUrl = getApiUrl(AC.HOME_URL);
+        else if (type==1)//mention
+            apiUrl = getApiUrl(AC.MENTION_URL);
+        RequestParams params = new RequestParams();
+        params.put("count", 10);
+        params.put("since_id", 1);
+        params.put("page", page);
+        client.get(apiUrl, params, handler);
+    }
 
 	public void doPost(String text, AsyncHttpResponseHandler handler){
 		String apiUrl = getApiUrl(AC.POST_URL);

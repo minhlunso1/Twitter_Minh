@@ -1,4 +1,4 @@
-package minhna.submission.twitter_minh;
+package minhna.submission.twitter_minh.view;
 
 
 import android.app.Dialog;
@@ -23,11 +23,12 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import org.apache.http.Header;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import minhna.submission.twitter_minh.AC;
+import minhna.submission.twitter_minh.R;
+import minhna.submission.twitter_minh.TwitterApplication;
+import minhna.submission.twitter_minh.build.PagerAdapter;
 
 /**
  * Created by Administrator on 28-Mar-16.
@@ -50,7 +51,6 @@ public class PostDialogFragment extends DialogFragment {
     public static  PostDialogFragment newInstance(String id) {
         PostDialogFragment frag = new PostDialogFragment();
         Bundle args = new Bundle();
-        args.putString("id", id);
         frag.setArguments(args);
 
         return frag;
@@ -91,7 +91,15 @@ public class PostDialogFragment extends DialogFragment {
                         listener.onUpdateList(response, status);
                         dismiss();
                     }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        super.onFailure(statusCode, headers, throwable, errorResponse);
+                        Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
+                    }
                 });
+
+
 
             }
         });
@@ -124,6 +132,6 @@ public class PostDialogFragment extends DialogFragment {
     public void onStart() {
         super.onStart();
         tvName.setText(AC.username);
-        Glide.with(getActivity()).load(AC.profile_img_url).placeholder(R.mipmap.ic_launcher).into(img_ava);
+        Glide.with(getActivity()).load(AC.profile_img_url).into(img_ava);
     }
 }

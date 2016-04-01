@@ -1,4 +1,4 @@
-package minhna.submission.twitter_minh;
+package minhna.submission.twitter_minh.view;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -11,6 +11,11 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import minhna.submission.twitter_minh.AC;
+import minhna.submission.twitter_minh.R;
+import minhna.submission.twitter_minh.TwitterApplication;
+import minhna.submission.twitter_minh.TwitterClient;
 
 public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
 
