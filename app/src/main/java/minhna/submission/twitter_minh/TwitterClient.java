@@ -22,7 +22,7 @@ public class TwitterClient extends OAuthBaseClient {
 		super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
 	}
 
-    public void getTwitterTimeline(int type, int page, AsyncHttpResponseHandler handler){
+    public void getTwitterTimeline(long user_id, String screen_name, int type, int page, AsyncHttpResponseHandler handler){
         String apiUrl = "";
         if (type==0)//homeline
             apiUrl = getApiUrl(AC.HOME_URL);
@@ -34,6 +34,8 @@ public class TwitterClient extends OAuthBaseClient {
         params.put("count", 10);
         params.put("since_id", 1);
         params.put("page", page);
+        params.put("user_id", user_id);
+        params.put("screen_name", screen_name);
         client.get(apiUrl, params, handler);
     }
 
@@ -47,6 +49,26 @@ public class TwitterClient extends OAuthBaseClient {
 	public void getProfile(AsyncHttpResponseHandler handler){
 		String apiUrl = getApiUrl(AC.PROFILE_URL);
 		client.get(apiUrl, null, handler);
+	}
+
+	public void getWhoFollowed(int type, long user_id, String screen_name, AsyncHttpResponseHandler handler){
+		String apiUrl = "";
+		if (type==0)//followers
+			apiUrl = getApiUrl(AC.FOLLOWERS_URL);
+		else if (type==1)//following
+			apiUrl = getApiUrl(AC.FRIENDS_URL);
+        RequestParams params = new RequestParams();
+        params.put("user_id", user_id);
+        params.put("screen_name", screen_name);
+		client.get(apiUrl, params, handler);
+	}
+
+	public void getAnotherUserInfo(long user_id, String screen_name, AsyncHttpResponseHandler handler){
+		String apiUrl = getApiUrl(AC.USER_URL);
+		RequestParams params = new RequestParams();
+		params.put("user_id", user_id);
+        params.put("screen_name", screen_name);
+		client.get(apiUrl, params, handler);
 	}
 
 	/* 1. Define the endpoint URL with getApiUrl and pass a relative path to the endpoint

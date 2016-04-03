@@ -2,6 +2,7 @@ package minhna.submission.twitter_minh.view;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -71,7 +72,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         twitterClient = TwitterApplication.getTwitterClient();
         if (getIntent().getParcelableExtra("user")!=null) {
-
+            userModel = getIntent().getParcelableExtra("user");
         } else
             userModel = AS.myUser;
         if (savedInstanceState==null) {
@@ -121,10 +122,40 @@ public class ProfileActivity extends AppCompatActivity {
     private void setupTabLayout() {
         tabLayout.addTab(tabLayout.newTab().setText(userModel.getFollwers_count() + " followers"));
         tabLayout.addTab(tabLayout.newTab().setText(userModel.getFollowing_count() + " following"));
+
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                showFollowDialog(tab);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                showFollowDialog(tab);
+            }
+
+            private void showFollowDialog(TabLayout.Tab tab) {
+                FragmentManager fm = getSupportFragmentManager();
+                String title = "";
+                int type = tab.getPosition();
+                if (type==0)
+                    title = "Followers";
+                else
+                    title = "Following";
+                FollowDialogFragment fragment = FollowDialogFragment.newInstance(title, type, userModel.getOwner_id(), userModel.getName());
+                fragment.show(fm, "fragment_follow");
+            }
+
+        });
     }
 
     private void getMoreData(final int page) {
-        twitterClient.getTwitterTimeline(1, page + 1, new JsonHttpResponseHandler() {
+        twitterClient.getTwitterTimeline(userModel.getOwner_id(), userModel.getName(), 2, page + 1, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
@@ -143,7 +174,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void getData(int page){
-        twitterClient.getTwitterTimeline(1, page, new JsonHttpResponseHandler() {
+        twitterClient.getTwitterTimeline(userModel.getOwner_id(), userModel.getName(), 2, page, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);

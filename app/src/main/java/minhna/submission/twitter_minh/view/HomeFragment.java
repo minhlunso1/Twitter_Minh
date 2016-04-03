@@ -29,6 +29,7 @@ import minhna.submission.twitter_minh.TwitterClient;
 import minhna.submission.twitter_minh.TwitterModel;
 import minhna.submission.twitter_minh.build.EndlessRecyclerViewScrollListener;
 import minhna.submission.twitter_minh.build.ItemAdapter;
+import minhna.submission.twitter_minh.var.AS;
 
 
 public class HomeFragment extends Fragment {
@@ -60,7 +61,6 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         activity = (AppCompatActivity) getActivity();
         twitterClient = TwitterApplication.getTwitterClient();
-        activity.getSupportActionBar().show();
     }
 
     @Override
@@ -93,7 +93,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void getMoreData(final int page) {
-        twitterClient.getTwitterTimeline(0, page+1, new JsonHttpResponseHandler() {
+        twitterClient.getTwitterTimeline(AS.myUser.getOwner_id(), AS.myUser.getName(), 0, page+1, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
@@ -112,7 +112,7 @@ public class HomeFragment extends Fragment {
     }
 
     public void getData(int page){
-        twitterClient.getTwitterTimeline(0, page, new JsonHttpResponseHandler() {
+        twitterClient.getTwitterTimeline(AS.myUser.getOwner_id(), AS.myUser.getName(), 0, page, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);

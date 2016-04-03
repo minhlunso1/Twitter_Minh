@@ -13,4 +13,7 @@ public class AC {
     public static final String PROFILE_URL = "/account/verify_credentials.json";
     public static final String MENTION_URL = "/statuses/mentions_timeline.json";
     public static final String USER_TIMELINE_URL = "/statuses/user_timeline.json";
+    public static final String FOLLOWERS_URL = "/followers/list.json";
+    public static final String FRIENDS_URL = "/friends/list.json";
+    public static final String USER_URL = "/users/show.json";
 }

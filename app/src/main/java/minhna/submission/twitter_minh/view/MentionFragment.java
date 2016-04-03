@@ -29,6 +29,7 @@ import minhna.submission.twitter_minh.TwitterClient;
 import minhna.submission.twitter_minh.TwitterModel;
 import minhna.submission.twitter_minh.build.EndlessRecyclerViewScrollListener;
 import minhna.submission.twitter_minh.build.ItemAdapter;
+import minhna.submission.twitter_minh.var.AS;
 
 /**
  * Created by Minh on 4/2/2016.
@@ -92,7 +93,7 @@ public class MentionFragment extends Fragment {
     }
 
     private void getMoreData(final int page) {
-        twitterClient.getTwitterTimeline(1, page+1, new JsonHttpResponseHandler() {
+        twitterClient.getTwitterTimeline(AS.myUser.getOwner_id(), AS.myUser.getName(), 1, page+1, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
@@ -111,7 +112,7 @@ public class MentionFragment extends Fragment {
     }
 
     public void getData(int page){
-        twitterClient.getTwitterTimeline(1, page, new JsonHttpResponseHandler() {
+        twitterClient.getTwitterTimeline(AS.myUser.getOwner_id(), AS.myUser.getName(), 1, page, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);

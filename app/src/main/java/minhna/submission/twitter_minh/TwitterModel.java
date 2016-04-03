@@ -4,8 +4,12 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import minhna.submission.twitter_minh.utils.ParseRelativeData;
 
@@ -27,7 +31,8 @@ public class TwitterModel implements Parcelable {
         private long following_count;
         private String tagline;
 
-        public UserModel(String name, String profileImageUrl) {
+        public UserModel(long userId, String name, String profileImageUrl) {
+            this.owner_id = userId;
             this.name = name;
             this.profileImageUrl = profileImageUrl;
         }
@@ -40,6 +45,30 @@ public class TwitterModel implements Parcelable {
             this.follwers_count = follwers_count;
             this.following_count = following_count;
             this.tagline = tagline;
+        }
+
+        public static UserModel fromJSON(JSONObject jsonObject){
+            try {
+                return new UserModel(jsonObject.getLong("id"), jsonObject.getString("screen_name"), jsonObject.getString("profile_image_url"), jsonObject.getString("profile_background_image_url"), jsonObject.getLong("followers_count"), jsonObject.getLong("friends_count"), jsonObject.getString("description"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        public static List<UserModel> getFollowListfromJSON (JSONObject jsonObject){
+            List<UserModel> userModels = new ArrayList<>();
+            try {
+                JSONArray users = jsonObject.getJSONArray("users");
+                for (int i=0; i<users.length();i++) {
+                    JSONObject user = users.getJSONObject(i);
+                    UserModel userModel = new UserModel(user.getLong("id"), user.getString("screen_name"), user.getString("profile_image_url"));
+                    userModels.add(userModel);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return userModels;
         }
 
         public long getOwner_id() {
@@ -145,7 +174,7 @@ public class TwitterModel implements Parcelable {
             model.setid(jsonObject.getLong("id"));
             model.setCreatedTime(ParseRelativeData.getRelativeTimeAgo(jsonObject.getString("created_at")));
             JSONObject userObject = jsonObject.getJSONObject("user");
-            model.setUser(new UserModel(userObject.getString("name"), userObject.getString("profile_image_url")));
+            model.setUser(new UserModel(userObject.getLong("id"), userObject.getString("screen_name"), userObject.getString("profile_image_url")));
         } catch (JSONException e){
             e.printStackTrace();
         }
@@ -159,7 +188,7 @@ public class TwitterModel implements Parcelable {
             model.setid(jsonObject.getLong("id"));
             model.setCreatedTime(ParseRelativeData.getRelativeTimeAgo(jsonObject.getString("created_at")));
             JSONObject userObject = jsonObject.getJSONObject("user");
-            model.setUser(new UserModel(userObject.getString("name"), userObject.getString("profile_image_url")));
+            model.setUser(new UserModel(userObject.getLong("id"), userObject.getString("screen_name"), userObject.getString("profile_image_url")));
         } catch (JSONException e){
             e.printStackTrace();
         }
