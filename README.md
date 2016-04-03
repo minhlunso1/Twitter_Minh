@@ -31,8 +31,10 @@ Walkthrough of all user stories:
 
 ## Video Walkthrough 
 
+##Week 03
 <img src='http://i.imgur.com/pAjYFwD.gif' title='Twitter_Minh' width='' alt='Twitter_Minh' />
 
+##Week 04
 <img src='http://i.imgur.com/UqpDYv6.gif' title='Twitter_Minh2' width='' alt='Twitter_Minh2' />
 ## License
 
