@@ -25,10 +25,10 @@ import org.json.JSONObject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import minhna.submission.twitter_minh.AC;
+import minhna.submission.twitter_minh.var.AC;
 import minhna.submission.twitter_minh.R;
 import minhna.submission.twitter_minh.TwitterApplication;
-import minhna.submission.twitter_minh.build.PagerAdapter;
+import minhna.submission.twitter_minh.var.AS;
 
 /**
  * Created by Administrator on 28-Mar-16.
@@ -131,7 +131,7 @@ public class PostDialogFragment extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
-        tvName.setText(AC.username);
-        Glide.with(getActivity()).load(AC.profile_img_url).into(img_ava);
+        tvName.setText(AS.myUser.getName());
+        Glide.with(getActivity()).load(AS.myUser.getProfileImageUrl()).into(img_ava);
     }
 }

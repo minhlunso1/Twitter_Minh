@@ -9,8 +9,7 @@ import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-import minhna.submission.twitter_minh.view.HomeFragment;
-import minhna.submission.twitter_minh.view.MainActivity;
+import minhna.submission.twitter_minh.var.AC;
 
 public class TwitterClient extends OAuthBaseClient {
 	public static final Class<? extends Api> REST_API_CLASS = TwitterApi.class; // Change this
@@ -29,6 +28,8 @@ public class TwitterClient extends OAuthBaseClient {
             apiUrl = getApiUrl(AC.HOME_URL);
         else if (type==1)//mention
             apiUrl = getApiUrl(AC.MENTION_URL);
+		else if (type==2)//usertimeline
+			apiUrl = getApiUrl(AC.USER_TIMELINE_URL);
         RequestParams params = new RequestParams();
         params.put("count", 10);
         params.put("since_id", 1);

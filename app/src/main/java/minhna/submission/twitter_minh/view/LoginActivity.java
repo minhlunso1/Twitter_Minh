@@ -12,7 +12,8 @@ import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import minhna.submission.twitter_minh.AC;
+import minhna.submission.twitter_minh.TwitterModel;
+import minhna.submission.twitter_minh.var.AS;
 import minhna.submission.twitter_minh.R;
 import minhna.submission.twitter_minh.TwitterApplication;
 import minhna.submission.twitter_minh.TwitterClient;
@@ -32,20 +33,20 @@ public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
 	@Override
 	public void onLoginSuccess() {
          progressDialog = ProgressDialog.show(this, "Loading",
-                "Please wait", true);
+                "Please wait", true, true);
 		 TwitterApplication.getTwitterClient().getProfile(new JsonHttpResponseHandler(){
 			 @Override
 			 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
 				 super.onSuccess(statusCode, headers, response);
 				 try {
-					 AC.owner_id = response.getLong("id");
-					 AC.username = response.getString("name");
-                     AC.profile_img_url = response.getString("profile_image_url");
+                     AS.myUser = new TwitterModel.UserModel(response.getLong("id"), response.getString("name"), response.getString("profile_image_url"), response.getString("profile_background_image_url"), response.getLong("followers_count"), response.getLong("friends_count"), response.getString("description"));
+
                      Intent i = new Intent(LoginActivity.this, MainActivity.class);
 					 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                      startActivity(i);
                      progressDialog.dismiss();
 				 } catch (JSONException e) {
+                     progressDialog.dismiss();
 					 e.printStackTrace();
 				 }
 			 }

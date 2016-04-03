@@ -19,12 +19,59 @@ public class TwitterModel implements Parcelable {
     private String createdTime;
 
     public static class UserModel implements Parcelable {
+        private long owner_id;
         private String name;
         private String profileImageUrl;
+        private String profileBackgroundImageUrl;
+        private long follwers_count;
+        private long following_count;
+        private String tagline;
 
         public UserModel(String name, String profileImageUrl) {
             this.name = name;
             this.profileImageUrl = profileImageUrl;
+        }
+
+        public UserModel(long owner_id, String name, String profileImageUrl, String profileBackgroundImageUrl, long follwers_count, long following_count, String tagline) {
+            this.owner_id = owner_id;
+            this.name = name;
+            this.profileImageUrl = profileImageUrl;
+            this.profileBackgroundImageUrl = profileBackgroundImageUrl;
+            this.follwers_count = follwers_count;
+            this.following_count = following_count;
+            this.tagline = tagline;
+        }
+
+        public long getOwner_id() {
+            return owner_id;
+        }
+
+        public void setOwner_id(long owner_id) {
+            this.owner_id = owner_id;
+        }
+
+        public String getProfileBackgroundImageUrl() {
+            return profileBackgroundImageUrl;
+        }
+
+        public void setProfileBackgroundImageUrl(String profileBackgroundImageUrl) {
+            this.profileBackgroundImageUrl = profileBackgroundImageUrl;
+        }
+
+        public long getFollwers_count() {
+            return follwers_count;
+        }
+
+        public void setFollwers_count(long follwers_count) {
+            this.follwers_count = follwers_count;
+        }
+
+        public long getFollowing_count() {
+            return following_count;
+        }
+
+        public void setFollowing_count(long following_count) {
+            this.following_count = following_count;
         }
 
         public String getName() {
@@ -43,6 +90,14 @@ public class TwitterModel implements Parcelable {
             this.profileImageUrl = profileImageUrl;
         }
 
+        public String getTagline() {
+            return tagline;
+        }
+
+        public void setTagline(String tagline) {
+            this.tagline = tagline;
+        }
+
         @Override
         public int describeContents() {
             return 0;
@@ -50,13 +105,23 @@ public class TwitterModel implements Parcelable {
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
+            dest.writeLong(this.owner_id);
             dest.writeString(this.name);
             dest.writeString(this.profileImageUrl);
+            dest.writeString(this.profileBackgroundImageUrl);
+            dest.writeLong(this.follwers_count);
+            dest.writeLong(this.following_count);
+            dest.writeString(this.tagline);
         }
 
         protected UserModel(Parcel in) {
+            this.owner_id = in.readLong();
             this.name = in.readString();
             this.profileImageUrl = in.readString();
+            this.profileBackgroundImageUrl = in.readString();
+            this.follwers_count = in.readLong();
+            this.following_count = in.readLong();
+            this.tagline =in.readString();
         }
 
         public static final Creator<UserModel> CREATOR = new Creator<UserModel>() {

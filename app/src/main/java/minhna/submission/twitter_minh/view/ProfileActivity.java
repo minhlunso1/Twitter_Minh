@@ -1,17 +1,19 @@
 package minhna.submission.twitter_minh.view;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.design.widget.TabLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.v7.widget.Toolbar;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
@@ -29,46 +31,71 @@ import minhna.submission.twitter_minh.TwitterClient;
 import minhna.submission.twitter_minh.TwitterModel;
 import minhna.submission.twitter_minh.build.EndlessRecyclerViewScrollListener;
 import minhna.submission.twitter_minh.build.ItemAdapter;
+import minhna.submission.twitter_minh.var.AS;
 
 /**
- * Created by Minh on 4/2/2016.
+ * Created by Administrator on 03-Apr-16.
  */
-public class MentionFragment extends Fragment {
+public class ProfileActivity extends AppCompatActivity {
+
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+    @Bind(R.id.tabLayout)
+    TabLayout tabLayout;
+    @Bind(R.id.img_ava)
+    RoundedImageView imgAva;
+    @Bind(R.id.tv_name)
+    TextView tvName;
+    @Bind(R.id.img_collapsing)
+    ImageView imgCollapsing;
+    @Bind(R.id.tv_tagline)
+    TextView tvTagline;
     @Bind(R.id.recyclerView)
     RecyclerView recyclerView;
     @Bind(R.id.swipeRefeshLayout)
     SwipeRefreshLayout swipeRefreshLayout;
 
     private int count = 10;
-
+    private TwitterModel.UserModel userModel;
     private TwitterClient twitterClient;
+
     private List<TwitterModel> list;
     private ItemAdapter adapter;
     private LinearLayoutManager layoutManager;
-    private AppCompatActivity activity;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
-        ButterKnife.bind(this, view);
-        return view;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activity = (AppCompatActivity) getActivity();
+        setContentView(R.layout.activity_profile);
+        ButterKnife.bind(this);
+
         twitterClient = TwitterApplication.getTwitterClient();
+        if (getIntent().getParcelableExtra("user")!=null) {
+
+        } else
+            userModel = AS.myUser;
+        if (savedInstanceState==null) {
+            setSupportActionBar(toolbar);
+            setupView();
+        }
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    private void setupView() {
+        Glide.with(this)
+                .load(userModel.getProfileImageUrl())
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(imgAva);
+        tvName.setText(userModel.getName());
+        Glide.with(this)
+                .load(userModel.getProfileBackgroundImageUrl())
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(imgCollapsing);
+        setupTabLayout();
+        tvTagline.setText(userModel.getTagline());
 
         list = new ArrayList<>();
-        adapter = new ItemAdapter(activity, list);
-        layoutManager = new LinearLayoutManager(activity);
+        adapter = new ItemAdapter(this, list);
+        layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
         recyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(layoutManager) {
@@ -91,18 +118,23 @@ public class MentionFragment extends Fragment {
         swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright);
     }
 
+    private void setupTabLayout() {
+        tabLayout.addTab(tabLayout.newTab().setText(userModel.getFollwers_count() + " followers"));
+        tabLayout.addTab(tabLayout.newTab().setText(userModel.getFollowing_count() + " following"));
+    }
+
     private void getMoreData(final int page) {
-        twitterClient.getTwitterTimeline(1, page+1, new JsonHttpResponseHandler() {
+        twitterClient.getTwitterTimeline(1, page + 1, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
                 try {
-                    for (int i=0; i<response.length(); i++) {
+                    for (int i = 0; i < response.length(); i++) {
                         JSONObject object = response.getJSONObject(i);
                         TwitterModel model = TwitterModel.getTwitterModel(object);
                         list.add(model);
                     }
-                    adapter.notifyItemRangeChanged((page*10)-1, count*page);
+                    adapter.notifyItemRangeChanged((page * 10) - 1, count * page);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -117,7 +149,7 @@ public class MentionFragment extends Fragment {
                 super.onSuccess(statusCode, headers, response);
                 try {
                     list.clear();
-                    for (int i=0; i<response.length(); i++) {
+                    for (int i = 0; i < response.length(); i++) {
                         JSONObject object = response.getJSONObject(i);
                         TwitterModel model = TwitterModel.getTwitterModel(object);
                         list.add(model);
@@ -145,4 +177,5 @@ public class MentionFragment extends Fragment {
         }
         getData(1);
     }
+
 }
